@@ -3,25 +3,57 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ワンストップ横断検索（アフィリエイト対応）</title>
+  <title>ワンストップ横断検索（修正版）</title>
   <style>
     :root{
-      --bg: #0f172a; /* slate-900 */
-      --panel: #111827ee; /* gray-900 */
-      --accent: #06b6d4; /* cyan-500 */
-      --accent-2: #22c55e; /* green-500 */
-      --text: #e5e7eb; /* gray-200 */
-      --muted: #94a3b8; /* slate-400 */
-      --ring: #67e8f9; /* cyan-300 */
+      --bg: #0f172a;
+      --panel: #111827ee;
+      --accent: #06b6d4;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --ring: #67e8f9;
     }
     html,body{height:100%;}
-    body{
+    body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #000; /* 背景黒 */
+    background-image: url('ch_img_miku.png'); /* ←アップロードした画像を使う場合、ファイル名を合わせる */
+    background-repeat: no-repeat;
+    background-position: right bottom; /* 右側に配置 */
+    background-size: auto 95%; /* 高さ基準で縮尺 */
+    font-family: sans-serif;
+    display: flex;
+    justify-content: flex-start; /* 左寄せ */
+    align-items: flex-start;
+    padding: 40px;
+    box-sizing: border-box;
+    color: #e5e7eb;
+    }
+    /* body{
       margin:0; background:
         radial-gradient(1200px 800px at 80% -10%, rgba(34,197,94,.15), transparent),
         radial-gradient(1000px 700px at -10% 20%, rgba(14,165,233,.15), transparent),
         var(--bg);
-      color:var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans JP", "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans JP";
       display:grid; place-items:center; padding:24px;
+      min-height: 100vh;
+      background: url('https://piapro.net/images/ch_img_miku.png') center bottom no-repeat;
+      background-size: cover;
+      position: relative;
+      font-family: sans-serif;
+    } */
+    .overlay {
+      background: rgba(15, 23, 42, 0.80);
+      padding: 40px;
+      border-radius: 16px;
+      backdrop-filter: blur(8px);
+      color: #e5e7eb;
+      width: 90%;
+      max-width: 600px;
+      margin: 40px auto;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     }
     .card{
       width:min(980px, 100%);
@@ -30,191 +62,136 @@
       box-shadow: 0 10px 30px rgba(0,0,0,.35);
       border-radius:20px; padding:24px; backdrop-filter: blur(8px);
     }
-    h1{margin:0 0 12px; font-size: clamp(20px, 3vw, 28px); letter-spacing: .02em}
+    h1{margin:0 0 12px; font-size: clamp(20px, 3vw, 28px)}
     p.helper{margin:4px 0 16px; color:var(--muted); font-size:14px}
-    .row{display:flex; gap:12px; flex-wrap:wrap}
-    .input-wrap{position:relative; flex:1 1 420px}
-    input[type="text"], input[type="url"]{
-      width:100%; padding:14px 44px 14px 44px; font-size:16px; color:#e2e8f0;
+    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+    .input-wrap{position:relative; flex:1 1 auto; min-width:250px}
+    input[type="text"]{
+      width:100%; padding:14px 44px; font-size:16px; color:#e2e8f0;
       background:#0b1220; border:1px solid rgba(148,163,184,.28); border-radius:14px;
       outline:none; transition:.2s border-color, .2s box-shadow;
     }
-    input[type="text"]:focus, input[type="url"]:focus{
+    input[type="text"]:focus{
       border-color:var(--ring); box-shadow:0 0 0 4px rgba(103,232,249,.15);
     }
     .search-icon{position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.6}
     .clear-btn{position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--muted); cursor:pointer; font-size:18px}
     .btn{appearance:none; border:1px solid rgba(148,163,184,.3); background:#0b1220; color:#e5e7eb;
-      padding:12px 16px; border-radius:12px; font-weight:600; cursor:pointer; transition:.2s transform,.2s background,.2s border-color;
+      padding:12px 16px; border-radius:12px; font-weight:600; cursor:pointer; transition:.2s transform,.2s border-color;
     }
     .btn:hover{transform:translateY(-1px); border-color:rgba(103,232,249,.6)}
     .btn:active{transform:translateY(0)}
-    .btn-primary{background:linear-gradient(180deg, rgba(34,211,238,.25), rgba(103,232,249,.15)); border-color:rgba(103,232,249,.6)}
-
-    .grid{display:grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap:12px; margin-top:14px}
-
-    .brand{display:flex; align-items:center; gap:10px}
-    .brand .logo{width:20px; height:20px; display:inline-block}
-
+    .btn-primary{background:linear-gradient(180deg, rgba(34,211,238,.25), rgba(103,232,249,.15)); border-color:rgba(103,232,249,.6); flex-shrink: 0;}
+    .grid{display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:14px}
+    .brand{display:flex; align-items:center; gap:10px; justify-content:center}
     .footer{margin-top:18px; color:var(--muted); font-size:12px}
-    .tip{font-size:12px; color:#a5b4fc}
-    a.inline{color:#93c5fd}
-
-    details.settings{margin-top:14px; border:1px dashed rgba(148,163,184,.3); border-radius:12px; padding:12px}
-    details.settings summary{cursor:pointer; color:#93c5fd; font-weight:600}
-    .settings-grid{display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px}
-    .settings-grid .field{display:flex; flex-direction:column; gap:6px}
-    .label{font-size:12px; color:var(--muted)}
-    .small{font-size:12px; color:var(--muted)}
+    .credit {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      font-size: 10px;
+      color: #a5b4fc;
+    }
+    a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
   <main class="card" role="main" aria-labelledby="title">
     <h1 id="title">ワンストップ横断検索</h1>
-    <p class="helper">検索文言を入力して、Google または各ショッピングサイトを新しいタブで開きます。<br><span class="tip">※ 検索文言が空の場合は各サイトのトップページを開きます。</span></p>
+    <p class="helper">検索文言を入力して、Google または各サイトを新しいタブで開きます。<br><span style="font-size:12px;color:#a5b4fc">※ 検索文言が空の場合は各サイトのトップページを開きます。</span></p>
 
     <form id="searchForm" class="row" autocomplete="on">
       <div class="input-wrap">
-        <svg class="search-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.471 6.471 0 0 0 1.57-4.23 6.5 6.5 0 1 0-6.5 6.5 6.471 6.471 0 0 0 4.23-1.57l.27.28v.79L20 20.5 21.5 19 15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <label class="sr-only" for="q">検索文言</label>
-        <input id="q" type="text" name="q" placeholder="検索したい商品名など" autofocus>
-        <button type="button" class="clear-btn" title="入力をクリア" aria-label="入力をクリア" onclick="clearQuery()">×</button>
+        <svg class="search-icon" viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.471 6.471 0 0 0 1.57-4.23 6.5 6.5 0 1 0-6.5 6.5 6.471 6.471 0 0 0 4.23-1.57l.27.28v.79L20 20.5 21.5 19 15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input id="q" type="text" name="q" placeholder="検索したいワード" autofocus>
+        <button type="button" class="clear-btn" onclick="clearQuery()">×</button>
       </div>
-      <button type="submit" class="btn btn-primary" id="googleBtn">Google検索</button>
+      <div>
+        <button type="submit" class="btn btn-primary">Google検索</button>
+      </div>
     </form>
 
-    <section aria-label="商品検索ボタン群" style="margin-top:16px">
+    <section style="margin-top:16px">
       <div class="grid">
-        <button class="btn brand" onclick="openAmazon()">
-          <span class="logo" aria-hidden="true">🅰️</span>
-          <span>Amazonで検索</span>
-        </button>
-        <button class="btn brand" onclick="openRakuten()">
-          <span class="logo" aria-hidden="true">💴</span>
-          <span>楽天で検索</span>
-        </button>
-        <button class="btn brand" onclick="openYahooShopping()">
-          <span class="logo" aria-hidden="true">🛒</span>
-          <span>Yahoo!ショッピングで検索</span>
-        </button>
+        <button class="btn brand" onclick="openAmazon()">Amazon</button>
+        <button class="btn brand" onclick="openRakuten()">楽天</button>
+        <button class="btn brand" onclick="openYahooShopping()">Yahoo!ショッピング</button>
+        <button class="btn brand" onclick="openYahooAuction()">ヤフオク</button>
+        <button class="btn brand" onclick="openYouTube()">YouTube</button>
+        <button class="btn brand" onclick="openNico()">ニコニコ動画</button>
+        <button class="btn brand" onclick="openTwitter()">X (Twitter)</button>
+        <button class="btn brand" onclick="openKakaku()">価格.com</button>
+        <button class="btn brand" onclick="openYodobashi()">ヨドバシカメラ</button>
       </div>
     </section>
 
-    <details class="settings">
-      <summary>⚙️ アフィリエイト設定（任意）</summary>
-      <div class="settings-grid">
-        <div class="field">
-          <label for="amazonTag" class="label">Amazonアソシエイト・トラッキングID（例: <code>yourtag-22</code>）</label>
-          <input type="text" id="amazonTag" placeholder="yourtag-22" inputmode="latin" autocomplete="off" />
-          <div class="small">設定すると、Amazon検索URLに <code>tag=…</code> を自動付与します。</div>
-        </div>
-        <div class="field">
-          <label for="rakutenWrapper" class="label">楽天アフィリエイト用 ラッパーURL（任意）</label>
-          <input type="url" id="rakutenWrapper" placeholder="https://hb.afl.rakuten.co.jp/…?pc=" />
-          <div class="small">楽天は公式の「リンク作成ツール」で<strong>任意URLを変換</strong>した際の <em>先頭（pc=の直後まで）</em> を指定してください。検索URLをこのラッパーで包んで開きます。</div>
-        </div>
-      </div>
-      <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
-        <button class="btn" onclick="saveSettings()">保存</button>
-        <span class="small" id="saveNote" aria-live="polite"></span>
-      </div>
-    </details>
-
-    <div class="footer">ショートカット: Enter = Google検索 / Ctrl+K で入力欄にフォーカス</div>
+    <div class="footer">Enter = Google検索 / Ctrl+K = 入力欄にフォーカス</div>
   </main>
 
   <script>
     const $ = (sel) => document.querySelector(sel);
-
-    function getQuery(){
-      return $('#q').value.trim();
-    }
-    function openInNewTab(url){
-      window.open(url, '_blank', 'noopener');
-    }
-
-    function withParam(url, key, value){
-      const u = new URL(url);
-      u.searchParams.set(key, value);
-      return u.toString();
-    }
+    function getQuery(){ return $('#q').value.trim(); }
+    function openInNewTab(url){ window.open(url,'_blank','noopener'); }
 
     function searchGoogle(){
       const q = getQuery();
-      const url = q ? `https://www.google.com/search?q=${encodeURIComponent(q)}`
-                    : 'https://www.google.com/';
-      openInNewTab(url);
+      openInNewTab(q ? `https://www.google.com/search?q=${encodeURIComponent(q)}` : 'https://www.google.com/');
     }
-
     function openAmazon(){
       const q = getQuery();
-      const tag = (localStorage.getItem('amazonTag')||'').trim();
-      let url = q ? `https://www.amazon.co.jp/s?k=${encodeURIComponent(q)}`
-                  : 'https://www.amazon.co.jp/';
-      if(tag){
-        try{ url = withParam(url, 'tag', tag); }catch(e){}
-      }
+      let url = q ? `https://www.amazon.co.jp/s?k=${encodeURIComponent(q)}` : 'https://www.amazon.co.jp/';
+      url += (url.includes('?') ? '&' : '?') + 'tag=magurnonakig-22';
       openInNewTab(url);
     }
-
     function openRakuten(){
       const q = getQuery();
-      const base = q ? `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(q)}/`
-                     : 'https://www.rakuten.co.jp/';
-      const wrapper = (localStorage.getItem('rakutenWrapper')||'').trim();
-      if(wrapper){
-        // 期待する形式例: https://hb.afl.rakuten.co.jp/xxxxx?pc=
-        // wrapper の末尾に pc= が含まれていなくても一応連結
-        const joiner = wrapper.endsWith('=') ? '' : (wrapper.includes('?') ? '&pc=' : '?pc=');
-        const finalUrl = `${wrapper}${joiner}${encodeURIComponent(base)}`;
-        openInNewTab(finalUrl);
-      }else{
+      let base = q ? `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(q)}/` : 'https://www.rakuten.co.jp/';
+      const wrap = 'https://hb.afl.rakuten.co.jp/hgc/kazuparea88?pc=';
+      if(q){
+        openInNewTab(wrap + encodeURIComponent(base));
+      } else {
         openInNewTab(base);
       }
     }
-
     function openYahooShopping(){
       const q = getQuery();
-      const url = q ? `https://shopping.yahoo.co.jp/search?p=${encodeURIComponent(q)}`
-                    : 'https://shopping.yahoo.co.jp/';
-      openInNewTab(url);
+      openInNewTab(q ? `https://shopping.yahoo.co.jp/search?p=${encodeURIComponent(q)}` : 'https://shopping.yahoo.co.jp/');
     }
-    function clearQuery(){
-      $('#q').value = '';
-      $('#q').focus();
+    function openYahooAuction(){
+      const q = getQuery();
+      openInNewTab(q ? `https://auctions.yahoo.co.jp/search/search?p=${encodeURIComponent(q)}` : 'https://auctions.yahoo.co.jp/');
+    }
+    function openYouTube(){
+      const q = getQuery();
+      openInNewTab(q ? `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}` : 'https://www.youtube.com/');
+    }
+    function openNico(){
+      const q = getQuery();
+      openInNewTab(q ? `https://www.nicovideo.jp/search/${encodeURIComponent(q)}` : 'https://www.nicovideo.jp/');
+    }
+    function openTwitter(){
+      const q = getQuery();
+      openInNewTab(q ? `https://x.com/search?q=${encodeURIComponent(q)}` : 'https://x.com/');
+    }
+    function openKakaku(){
+      const q = getQuery();
+      openInNewTab(q ? `https://kakaku.com/search_results/${encodeURIComponent(q)}/` : 'https://kakaku.com/');
+    }
+    function openYodobashi(){
+      const q = getQuery();
+      openInNewTab(q ? `https://www.yodobashi.com/?word=${encodeURIComponent(q)}` : 'https://www.yodobashi.com/');
     }
 
-    // 保存/読み込み
-    function saveSettings(){
-      const tag = $('#amazonTag').value.trim();
-      const wrap = $('#rakutenWrapper').value.trim();
-      localStorage.setItem('amazonTag', tag);
-      localStorage.setItem('rakutenWrapper', wrap);
-      const note = $('#saveNote');
-      note.textContent = '保存しました';
-      setTimeout(()=> note.textContent = '', 2000);
-    }
-    function loadSettings(){
-      $('#amazonTag').value = localStorage.getItem('amazonTag')||'';
-      $('#rakutenWrapper').value = localStorage.getItem('rakutenWrapper')||'';
-    }
-
-    // Form submit -> Google検索（新規タブ）
-    $('#searchForm').addEventListener('submit', (e)=>{
-      e.preventDefault();
-      searchGoogle();
-    });
-
-    // Ctrl+K でフォーカス
-    window.addEventListener('keydown', (e)=>{
-      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
-        e.preventDefault();
-        $('#q').focus();
-      }
-    });
-
-    // 初期化
-    loadSettings();
+    function clearQuery(){ $('#q').value=''; $('#q').focus(); }
+    $('#searchForm').addEventListener('submit', e=>{e.preventDefault(); searchGoogle();});
+    window.addEventListener('keydown', e=>{ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){ e.preventDefault(); $('#q').focus(); }});
   </script>
+  <div class="credit">
+    Hatsune Miku by Crypton Future Media, INC. is licensed under a 
+    <a href="https://creativecommons.org/licenses/by-nc/3.0/" target="_blank">Creative Commons BY-NC 3.0</a>.
+  </div>
 </body>
 </html>
